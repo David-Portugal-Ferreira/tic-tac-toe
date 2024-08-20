@@ -33,12 +33,12 @@ let gameBoard = (function () {
         ) {
             console.log(player + ' WINS');
         }
-
-        const resetGameBoard = () => {
-            gameboard = [];
-            turn = 1;
-        };
     }
+
+    const resetGameBoard = () => {
+        gameboard = [];
+        turn = 1;
+    };
 
     return { setPosition, getPosition, getPlayer }
 })();
@@ -53,16 +53,17 @@ let displayController = (function () {
 
     const addChildrenEvent = () => {
         allChildren.map((children, index) => {
-            children.addEventListener('click', () => {
-                children.innerText = gameBoard.getPlayer();
-                gameBoard.setPosition(index + 1);
-                removeChildrenEvent(index);
-            });
+            children.addEventListener('click', setChildEvent(children, index));
         })
     }
 
+    const setChildEvent = function(children, index) {
+        children.innerText = gameBoard.getPlayer();
+        gameBoard.setPosition(index + 1);
+    }
+
     const removeChildrenEvent = (index) => {
-        allChildren.splice(index, 1);
+        allChildren[index].removeEventListener('click', setChildEvent);
     }
 
     const renderBoard = () => {
@@ -73,7 +74,7 @@ let displayController = (function () {
 
     addChildrenEvent();
 
-    return { renderBoard, allChildren }
+    return { renderBoard, removeChildrenEvent }
 })();
 
 function createUser(name) {
