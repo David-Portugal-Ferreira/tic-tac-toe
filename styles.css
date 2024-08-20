@@ -42,6 +42,13 @@ body {
 .second-row {
     border-bottom: 1px solid black;
 }
+.first-row div,
+.second-row div,
+.third-row  div{
+    background-color: gray;
+    height: 90%;
+    width: 90%;
+}
 
 .player-1, .player-2 {
     justify-self: center;
