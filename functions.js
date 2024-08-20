@@ -1,10 +1,22 @@
 let gameBoard = (function () {
     let gameboard = [];
+    let player = 'X';
+    let turn = 1;
+
+    const setPlayer = () => {
+        turn % 2 === 0 ? player = 'O' : player = 'X';
+    }
+    const getPlayer = () => player;
+
+    const incrementTurn = () => ++turn;
 
     const setPosition = (index, type) => {
         gameboard[index] = type;
         checkGameStatus();
+        incrementTurn()
+        setPlayer();
     }
+    const getPositions = () => gameboard.length;
 
     const checkGameStatus = () => {
         for(let i = 0; i < 2; i++) {
@@ -28,9 +40,12 @@ let gameBoard = (function () {
         }
     }
 
-    const getPositions = () => gameboard;
+    const resetGameBoard = () => {
+        gameboard = [];
+        turn = 1;
+    };
 
-    return { setPosition, getPositions }
+    return { setPosition, getPositions, getPlayer}
 })();
 
 let displayController = (function () {
