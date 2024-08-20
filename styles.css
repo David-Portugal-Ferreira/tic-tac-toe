@@ -1,0 +1,35 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+
+    background-color: darkgoldenrod;
+}
+
+.content {
+    width: 75%;
+    display: grid;
+    grid-template-columns: 2fr 10fr 2fr;
+    background-color: aqua;
+}
+
+.gameboard {
+    justify-self: center;
+    display: flex;
+    flex-direction: column;
+}
+.first-row,
+.second-row,
+.third-row {
+    display: flex;
+    margin: 10px;
+}
