@@ -16,20 +16,33 @@ body {
 }
 
 .content {
-    width: 75%;
+    width: 90%;
     display: grid;
-    grid-template-columns: 2fr 10fr 2fr;
+    grid-template-columns: 3fr 10fr 3fr;
     background-color: aqua;
 }
 
 .gameboard {
     justify-self: center;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    gap: 10px;
+    width: 90%;
+    margin: 15px;
 }
 .first-row,
 .second-row,
 .third-row {
-    display: flex;
-    margin: 10px;
+    align-items: center;
+    justify-items: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-auto-rows: 50px;
+}
+.first-row,
+.second-row {
+    border-bottom: 1px solid black;
+}
+
+.player-1, .player-2 {
+    justify-self: center;
 }
