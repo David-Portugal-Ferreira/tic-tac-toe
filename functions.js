@@ -156,16 +156,26 @@ let displayController = (function () {
     }
 
     startGameButton.addEventListener('click', () => {
-        while (player1.getName() === '') {
-            let name = prompt("Player 1 name: ")
+        let name = prompt("Player 1 name: ");
+        if(name) {
             player1.setName(name);
             player1Name.innerText = player1.getName();
+        } else {
+            player1.setName('Player 1');
+            player1Name.innerText = player1.getName();
         }
-        while (player2.getName() === '') {
-            let name = prompt("Player 2 name: ")
+        
+
+        name = prompt("Player 2 name: ")
+        if(name) {
             player2.setName(name);
             player2Name.innerText = player2.getName();
+        } else {
+            player2.setName('Player 2');
+            player2Name.innerText = player2.getName();
         }
+        
+        
         addChildrenEvent();
         document.querySelector('.start-game').removeChild(startGameButton);
         resetGameButton.style.display = 'block';
