@@ -23,7 +23,7 @@ body {
 .gameboard {
     justify-self: center;
     display: grid;
-    gap: 10px;
+    gap: 1px;
     width: 90%;
     margin: 15px;
 }
@@ -43,20 +43,38 @@ body {
 .first-row div,
 .second-row div,
 .third-row  div{
-    background-color: gray;
+    background-color: rgb(208, 208, 208);
     height: 90%;
     width: 90%;
+    align-content: center;
+    text-align: center;
+    font-size: 30px;
 }
 
 .player-1, .player-2 {
     justify-self: center;
 }
 
-.resetButton {
+.controls {
+    display: flex;
+}
+
+.reset-button {
     padding: 7px;
     width: 150px;
     font-size: 16px;
-    background-color: lightblue;
+    background-color: black;
+    color: white;
+    border-style: none;
+    border-radius: 10px;
+    margin-left: 10px;
+}
+
+.reset-game {
+    padding: 7px;
+    width: 150px;
+    font-size: 16px;
+    background-color: black;
     color: white;
     border-style: none;
     border-radius: 10px;

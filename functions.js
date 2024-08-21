@@ -1,3 +1,21 @@
+function createUser(marker) {
+    let points = 0;
+    let name = '';
+    const playerMarker = marker;
+
+    const setName = (playerName) => name = playerName;
+    const getName = () => name;
+    const getPoints = () => points;
+    const getMarker = () => playerMarker;
+    const incrementPoints = () => points++;
+    const resetPoints = () => points = 0;
+
+    return { getName, setName, getPoints, incrementPoints, getMarker, resetPoints }
+}
+
+const player1 = createUser('X');
+const player2 = createUser('O');
+
 let gameBoard = (function () {
     let gameboard = [];
     let turn = 0;
@@ -32,7 +50,7 @@ let gameBoard = (function () {
             (gameboard[0] === player.getMarker() && gameboard[4] === player.getMarker() && gameboard[8] === player.getMarker()) ||
             (gameboard[2] === player.getMarker() && gameboard[4] === player.getMarker() && gameboard[6] === player.getMarker())
         ) {
-            alert(player.name + ' WINS');
+            alert(player.getName() + ' WINS');
             player.incrementPoints();
             displayController.displayPoints(player.getMarker(), player.getPoints());
             displayController.finishGame();
@@ -44,27 +62,38 @@ let gameBoard = (function () {
         }
     }
 
-    return { setPosition, getPosition, getPlayer, setPlayer }
+    const resetGameBoardVariables = () => {
+        gameboard = [];
+        player = '';
+        turn = 0;
+    }
+
+    return { setPosition, getPosition, getPlayer, setPlayer, resetGameBoardVariables }
 })();
 
 let displayController = (function () {
 
     const eventsArray = [];
 
+    const player1Name = document.querySelector('.player-1-name');
     const player1Points = document.querySelector('.player-1-points');
-    const player2Points = document.querySelector('.player-2-points')
+    const player2Name = document.querySelector('.player-2-name');
+    const player2Points = document.querySelector('.player-2-points');
 
-    const wrapperDiv = document.querySelector('.wrapper');
+    const controlsDiv = document.querySelector('.controls');
     const firstRow = document.querySelector('.first-row').children;
     const secondRow = document.querySelector('.second-row').children;
     const thirdRow = document.querySelector('.third-row').children;
 
+    const resetGameButton = document.querySelector('.reset-game');
+    const startGameButton = document.querySelector('.start-game-btn');
 
-    const resetGameButton = document.createElement('button');
-    resetGameButton.innerText = 'Reset Game';
-    resetGameButton.classList.add('resetButton');
+    const clearBoardButton = document.createElement('button');
+    clearBoardButton.innerText = 'Clear Board';
+    clearBoardButton.classList.add('reset-button');
 
     const allChildren = [...firstRow, ...secondRow, ...thirdRow];
+    resetGameButton.style.display = 'none';
 
     const addChildrenEvent = () => {
         allChildren.map((children, index) => {
@@ -106,30 +135,41 @@ let displayController = (function () {
         }
     }
 
-    resetGameButton.addEventListener('click', () => {
+    clearBoardButton.addEventListener('click', () => {
         restarGame();
-        wrapperDiv.removeChild(wrapperDiv.lastChild);
+        controlsDiv.removeChild(controlsDiv.lastChild);
+    })
+
+    resetGameButton.addEventListener('click', () => {
+        gameBoard.resetGameBoardVariables();
+        restarGame();
+        player1.resetPoints();
+        player1Points.innerText = '';
+        player2.resetPoints();
+        player2Points.innerText = '';
+        let button = controlsDiv.querySelector('.reset-button');
+        if (button !== null) controlsDiv.removeChild(controlsDiv.lastChild);
     })
 
     const displayResetButton = () => {
-        wrapperDiv.appendChild(resetGameButton);
+        controlsDiv.appendChild(clearBoardButton);
     }
 
-    addChildrenEvent();
+    startGameButton.addEventListener('click', () => {
+        while (player1.getName() === '') {
+            let name = prompt("Player 1 name: ")
+            player1.setName(name);
+            player1Name.innerText = player1.getName();
+        }
+        while (player2.getName() === '') {
+            let name = prompt("Player 2 name: ")
+            player2.setName(name);
+            player2Name.innerText = player2.getName();
+        }
+        addChildrenEvent();
+        document.querySelector('.start-game').removeChild(startGameButton);
+        resetGameButton.style.display = 'block';
+    })
 
     return { restarGame, finishGame, displayPoints, displayResetButton }
 })();
-
-function createUser(name, marker) {
-    let points = 0;
-    const playerMarker = marker;
-
-    const getPoints = () => points;
-    const getMarker = () => playerMarker;
-    const incrementPoints = () => points++;
-
-    return { name, getPoints, incrementPoints, getMarker }
-}
-
-const player1 = createUser('Will', 'X');
-const player2 = createUser('John', 'O');
