@@ -79,3 +79,13 @@ body {
     border-style: none;
     border-radius: 10px;
 }
+
+.start-game-btn {
+    padding: 7px;
+    width: 150px;
+    font-size: 16px;
+    background-color: black;
+    color: white;
+    border-style: none;
+    border-radius: 10px;
+}
