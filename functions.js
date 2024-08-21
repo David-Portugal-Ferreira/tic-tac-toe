@@ -1,49 +1,58 @@
 let gameBoard = (function () {
     let gameboard = [];
-    let player = 'X';
-    let turn = 1;
+    let turn = 0;
+    let player = '';
+    let gameWin = false;
 
     const setPlayer = () => {
-        turn % 2 === 0 ? player = 'O' : player = 'X';
+        player = turn % 2 === 0 ? player1.getMarker() : player2.getMarker();
     }
     const getPlayer = () => player;
 
-    const incrementTurn = () => turn++;
+    const incrementTurn = () => {
+        turn++;
+    }
 
-    const setPosition = (index) => {
+    const setPosition = (index, currentPlayer) => {
+        setPlayer(currentPlayer);
         gameboard[index] = player;
         checkGameStatus();
-        incrementTurn()
-        setPlayer();
+        incrementTurn();
     }
     const getPosition = () => gameboard;
 
     const checkGameStatus = () => {
         if (
-            (gameboard[1] === player && gameboard[2] === player && gameboard[3] === player) ||
-            (gameboard[4] === player && gameboard[5] === player && gameboard[6] === player) ||
-            (gameboard[7] === player && gameboard[8] === player && gameboard[9] === player) ||
+            (gameboard[0] === player && gameboard[1] === player && gameboard[2] === player) ||
+            (gameboard[3] === player && gameboard[4] === player && gameboard[5] === player) ||
+            (gameboard[6] === player && gameboard[7] === player && gameboard[8] === player) ||
 
+            (gameboard[0] === player && gameboard[3] === player && gameboard[6] === player) ||
             (gameboard[1] === player && gameboard[4] === player && gameboard[7] === player) ||
             (gameboard[2] === player && gameboard[5] === player && gameboard[8] === player) ||
-            (gameboard[3] === player && gameboard[6] === player && gameboard[9] === player) ||
 
-            (gameboard[1] === player && gameboard[5] === player && gameboard[9] === player) ||
-            (gameboard[3] === player && gameboard[5] === player && gameboard[7] === player)
+            (gameboard[0] === player && gameboard[4] === player && gameboard[8] === player) ||
+            (gameboard[2] === player && gameboard[4] === player && gameboard[6] === player)
         ) {
             console.log(player + ' WINS');
+            gameWin = true;
         }
     }
 
+    if(gameWin) resetGameBoard();
+
     const resetGameBoard = () => {
         gameboard = [];
-        turn = 1;
+        player = '';
+        gameWin = false;
     };
 
     return { setPosition, getPosition, getPlayer }
 })();
 
 let displayController = (function () {
+
+    const eventsArray = [];
 
     const firstRow = document.querySelector('.first-row').children;
     const secondRow = document.querySelector('.second-row').children;
@@ -53,35 +62,33 @@ let displayController = (function () {
 
     const addChildrenEvent = () => {
         allChildren.map((children, index) => {
-            children.addEventListener('click', setChildEvent(children, index));
+            const handler = () => {
+                gameBoard.setPosition(index, gameBoard.getPlayer());
+                allChildren[index].innerText = gameBoard.getPlayer();
+                removeChildrenEvent(index);
+            }
+            children.addEventListener('click', handler);
+            eventsArray[index] = handler;
         })
-    }
-
-    const setChildEvent = function(children, index) {
-        children.innerText = gameBoard.getPlayer();
-        gameBoard.setPosition(index + 1);
     }
 
     const removeChildrenEvent = (index) => {
-        allChildren[index].removeEventListener('click', setChildEvent);
-    }
-
-    const renderBoard = () => {
-        allChildren.map((children, index) => {
-            children.innerText = index;
-        })
+        allChildren[index].removeEventListener('click', eventsArray[index]);
     }
 
     addChildrenEvent();
-
-    return { renderBoard, removeChildrenEvent }
 })();
 
-function createUser(name) {
+function createUser(name, marker) {
     let points = 0;
+    const playerMarker = marker;
 
     const getPoints = () => points;
+    const getMarker = () => playerMarker;
     const incrementPoints = () => points++;
 
-    return { name, getPoints, incrementPoints }
+    return { name, getPoints, incrementPoints, getMarker }
 }
+
+const player1 = createUser('Will', 'X');
+const player2 = createUser('John', 'O');

@@ -11,15 +11,12 @@ body {
     align-items: center;
     width: 100%;
     height: 100%;
-
-    background-color: darkgoldenrod;
 }
 
 .content {
     width: 90%;
     display: grid;
     grid-template-columns: 3fr 10fr 3fr;
-    background-color: aqua;
 }
 
 .gameboard {
