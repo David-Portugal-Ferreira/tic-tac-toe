@@ -1,13 +1,13 @@
 let gameBoard = (function () {
     let gameboard = [];
     let turn = 0;
-    let player = '';
+    let player;
     let gameWin = false;
 
     const setPlayer = () => {
-        player = turn % 2 === 0 ? player1.getMarker() : player2.getMarker();
+        player = turn % 2 === 0 ? player1 : player2;
     }
-    const getPlayer = () => player;
+    const getPlayer = () => player.getMarker();
 
     const incrementTurn = () => {
         turn++;
@@ -15,7 +15,7 @@ let gameBoard = (function () {
     }
 
     const setPosition = (index) => {
-        gameboard[index] = player;
+        gameboard[index] = player.getMarker();
         incrementTurn();
         checkGameStatus();
     }
@@ -23,19 +23,21 @@ let gameBoard = (function () {
 
     const checkGameStatus = () => {
         if (
-            (gameboard[0] === player && gameboard[1] === player && gameboard[2] === player) ||
-            (gameboard[3] === player && gameboard[4] === player && gameboard[5] === player) ||
-            (gameboard[6] === player && gameboard[7] === player && gameboard[8] === player) ||
+            (gameboard[0] === player.getMarker() && gameboard[1] === player.getMarker() && gameboard[2] === player.getMarker()) ||
+            (gameboard[3] === player.getMarker() && gameboard[4] === player.getMarker() && gameboard[5] === player.getMarker()) ||
+            (gameboard[6] === player.getMarker() && gameboard[7] === player.getMarker() && gameboard[8] === player.getMarker()) ||
 
-            (gameboard[0] === player && gameboard[3] === player && gameboard[6] === player) ||
-            (gameboard[1] === player && gameboard[4] === player && gameboard[7] === player) ||
-            (gameboard[2] === player && gameboard[5] === player && gameboard[8] === player) ||
+            (gameboard[0] === player.getMarker() && gameboard[3] === player.getMarker() && gameboard[6] === player.getMarker()) ||
+            (gameboard[1] === player.getMarker() && gameboard[4] === player.getMarker() && gameboard[7] === player.getMarker()) ||
+            (gameboard[2] === player.getMarker() && gameboard[5] === player.getMarker() && gameboard[8] === player.getMarker()) ||
 
-            (gameboard[0] === player && gameboard[4] === player && gameboard[8] === player) ||
-            (gameboard[2] === player && gameboard[4] === player && gameboard[6] === player)
+            (gameboard[0] === player.getMarker() && gameboard[4] === player.getMarker() && gameboard[8] === player.getMarker()) ||
+            (gameboard[2] === player.getMarker() && gameboard[4] === player.getMarker() && gameboard[6] === player.getMarker())
         ) {
-            alert(player + ' WINS');
             gameWin = true;
+            alert(player.name + ' WINS');
+            player.incrementPoints();
+            displayController.displayPoints(player.getMarker(), player.getPoints());
             displayController.finishGame();
         }
     }
@@ -56,6 +58,9 @@ let gameBoard = (function () {
 let displayController = (function () {
 
     const eventsArray = [];
+
+    const player1Points = document.querySelector('.player-1-points');
+    const player2Points = document.querySelector('.player-2-points')
 
     const firstRow = document.querySelector('.first-row').children;
     const secondRow = document.querySelector('.second-row').children;
@@ -93,9 +98,17 @@ let displayController = (function () {
         addChildrenEvent();
     }
 
+    const displayPoints = (marker, points) => {
+        if(marker === 'X') {
+            player1Points.innerText = `Points: ${points}`;
+        } else {
+            player2Points.innerText = `Points: ${points}`;
+        }
+    }
+
     addChildrenEvent();
 
-    return { restarGame, finishGame }
+    return { restarGame, finishGame, displayPoints }
 })();
 
 function createUser(name, marker) {
