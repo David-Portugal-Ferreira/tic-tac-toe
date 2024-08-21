@@ -51,3 +51,13 @@ body {
 .player-1, .player-2 {
     justify-self: center;
 }
+
+.resetButton {
+    padding: 7px;
+    width: 150px;
+    font-size: 16px;
+    background-color: lightblue;
+    color: white;
+    border-style: none;
+    border-radius: 10px;
+}

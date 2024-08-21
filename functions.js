@@ -44,10 +44,7 @@ let gameBoard = (function () {
         }
     }
 
-    const resetGameBoard = () => {
-    };
-
-    return { setPosition, getPosition, getPlayer, setPlayer, resetGameBoard }
+    return { setPosition, getPosition, getPlayer, setPlayer }
 })();
 
 let displayController = (function () {
@@ -64,6 +61,8 @@ let displayController = (function () {
 
 
     const resetGameButton = document.createElement('button');
+    resetGameButton.innerText = 'Reset Game';
+    resetGameButton.classList.add('resetButton');
 
     const allChildren = [...firstRow, ...secondRow, ...thirdRow];
 
@@ -109,6 +108,7 @@ let displayController = (function () {
 
     resetGameButton.addEventListener('click', () => {
         restarGame();
+        wrapperDiv.removeChild(wrapperDiv.lastChild);
     })
 
     const displayResetButton = () => {
