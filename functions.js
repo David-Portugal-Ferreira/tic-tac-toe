@@ -2,7 +2,6 @@ let gameBoard = (function () {
     let gameboard = [];
     let turn = 0;
     let player;
-    let gameWin = false;
 
     const setPlayer = () => {
         player = turn % 2 === 0 ? player1 : player2;
@@ -11,7 +10,6 @@ let gameBoard = (function () {
 
     const incrementTurn = () => {
         turn++;
-        console.log(turn);
     }
 
     const setPosition = (index) => {
@@ -34,25 +32,22 @@ let gameBoard = (function () {
             (gameboard[0] === player.getMarker() && gameboard[4] === player.getMarker() && gameboard[8] === player.getMarker()) ||
             (gameboard[2] === player.getMarker() && gameboard[4] === player.getMarker() && gameboard[6] === player.getMarker())
         ) {
-            gameWin = true;
             alert(player.name + ' WINS');
             player.incrementPoints();
             displayController.displayPoints(player.getMarker(), player.getPoints());
             displayController.finishGame();
+            displayController.displayResetButton();
+
+            gameboard = [];
+            player = '';
+            turn = 0;
         }
     }
 
-    if(gameWin) resetGameBoard();
-
     const resetGameBoard = () => {
-        gameboard = [];
-        player = '';
-        turn = 0;
-        gameWin = false;
-        displayController.restarGame();
     };
 
-    return { setPosition, getPosition, getPlayer, setPlayer }
+    return { setPosition, getPosition, getPlayer, setPlayer, resetGameBoard }
 })();
 
 let displayController = (function () {
@@ -62,9 +57,13 @@ let displayController = (function () {
     const player1Points = document.querySelector('.player-1-points');
     const player2Points = document.querySelector('.player-2-points')
 
+    const wrapperDiv = document.querySelector('.wrapper');
     const firstRow = document.querySelector('.first-row').children;
     const secondRow = document.querySelector('.second-row').children;
     const thirdRow = document.querySelector('.third-row').children;
+
+
+    const resetGameButton = document.createElement('button');
 
     const allChildren = [...firstRow, ...secondRow, ...thirdRow];
 
@@ -81,10 +80,12 @@ let displayController = (function () {
         })
     }
 
+    // Remove after click
     const removeChildrenEvent = (index) => {
         allChildren[index].removeEventListener('click', eventsArray[index]);
     }
 
+    // Remove from all, once game finish
     const finishGame = () => {
         allChildren.map((child, index) => {
             child.removeEventListener('click', eventsArray[index]);
@@ -99,16 +100,24 @@ let displayController = (function () {
     }
 
     const displayPoints = (marker, points) => {
-        if(marker === 'X') {
+        if (marker === 'X') {
             player1Points.innerText = `Points: ${points}`;
         } else {
             player2Points.innerText = `Points: ${points}`;
         }
     }
 
+    resetGameButton.addEventListener('click', () => {
+        restarGame();
+    })
+
+    const displayResetButton = () => {
+        wrapperDiv.appendChild(resetGameButton);
+    }
+
     addChildrenEvent();
 
-    return { restarGame, finishGame, displayPoints }
+    return { restarGame, finishGame, displayPoints, displayResetButton }
 })();
 
 function createUser(name, marker) {
