@@ -11,13 +11,13 @@ let gameBoard = (function () {
 
     const incrementTurn = () => {
         turn++;
+        console.log(turn);
     }
 
-    const setPosition = (index, currentPlayer) => {
-        setPlayer(currentPlayer);
+    const setPosition = (index) => {
         gameboard[index] = player;
-        checkGameStatus();
         incrementTurn();
+        checkGameStatus();
     }
     const getPosition = () => gameboard;
 
@@ -34,8 +34,9 @@ let gameBoard = (function () {
             (gameboard[0] === player && gameboard[4] === player && gameboard[8] === player) ||
             (gameboard[2] === player && gameboard[4] === player && gameboard[6] === player)
         ) {
-            console.log(player + ' WINS');
+            alert(player + ' WINS');
             gameWin = true;
+            displayController.finishGame();
         }
     }
 
@@ -44,10 +45,12 @@ let gameBoard = (function () {
     const resetGameBoard = () => {
         gameboard = [];
         player = '';
+        turn = 0;
         gameWin = false;
+        displayController.restarGame();
     };
 
-    return { setPosition, getPosition, getPlayer }
+    return { setPosition, getPosition, getPlayer, setPlayer }
 })();
 
 let displayController = (function () {
@@ -63,8 +66,9 @@ let displayController = (function () {
     const addChildrenEvent = () => {
         allChildren.map((children, index) => {
             const handler = () => {
-                gameBoard.setPosition(index, gameBoard.getPlayer());
+                gameBoard.setPlayer();
                 allChildren[index].innerText = gameBoard.getPlayer();
+                gameBoard.setPosition(index, gameBoard.getPlayer());
                 removeChildrenEvent(index);
             }
             children.addEventListener('click', handler);
@@ -76,7 +80,22 @@ let displayController = (function () {
         allChildren[index].removeEventListener('click', eventsArray[index]);
     }
 
+    const finishGame = () => {
+        allChildren.map((child, index) => {
+            child.removeEventListener('click', eventsArray[index]);
+        })
+    }
+
+    const restarGame = () => {
+        allChildren.map((child) => {
+            child.innerText = '';
+        })
+        addChildrenEvent();
+    }
+
     addChildrenEvent();
+
+    return { restarGame, finishGame }
 })();
 
 function createUser(name, marker) {
